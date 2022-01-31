@@ -9,6 +9,9 @@ from google.oauth2 import id_token
 import google
 import requests
 
+PROJECT_ID = "<input_yours>" #input("Enter your project ID: ")
+EXPERIMENT_NAME = input("Enter the name of your MLFlow experiment: ")
+tracking_uri = f"https://mlflow-dot-{PROJECT_ID}.ew.r.appspot.com"
 
 def get_token():
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ""
@@ -27,7 +30,7 @@ def get_token():
 
 
 def fetch_sa_key():
-    check_output([f"gcloud iam service-accounts keys create ./mlflow-log-pusher-key.json --iam-account mlflow-log-pusher@{PROJECT_ID}.iam.gserviceaccount.com"], shell=True)
+    check_output([f"gcloud iam service-accounts keys create ./mlflow-log-pusher-key.json --iam-account mlflow-log-pusher@{PROJECT_ID}.iam.gserviceaccount.com"], shell=True)    
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(Path(__file__).parent / "mlflow-log-pusher-key.json")
 
 
@@ -53,14 +56,7 @@ def _get_client_id(service_uri):
     return query_string["client_id"][0]
 
 
-PROJECT_ID = input("Enter your project ID: ")
-EXPERIMENT_NAME = input("Enter the name of your MLFlow experiment: ")
-
-# If mlflow if not deployed on the default app engine service, change it with the url of your service <!-- omit in toc -->
-tracking_uri = f"https://mlflow-dot-{PROJECT_ID}.ew.r.appspot.com"
-
 os.environ["MLFLOW_TRACKING_TOKEN"] = get_token()
-
 set_tracking_uri(tracking_uri)
 print(f"Tracking uri set to {tracking_uri}")
 set_experiment(EXPERIMENT_NAME)
