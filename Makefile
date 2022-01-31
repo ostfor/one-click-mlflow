@@ -14,6 +14,9 @@ endif
 .PHONY: one-click-mlflow
 one-click-mlflow: welcome dependencies-checks pre-requisites set-config deploy goodbye
 
+.PHONY: my_deploy
+my_deploy: apply goodbye
+
 .PHONY: deploy
 deploy: docker apply
 
